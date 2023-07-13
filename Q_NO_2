@@ -1,0 +1,64 @@
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+def find_distance(root, node1, node2):
+    def find_common_ancestor(node, value1, value2):
+        if value1 < node.value and value2 < node.value:
+            return find_common_ancestor(node.left, value1, value2)
+        elif value1 > node.value and value2 > node.value:
+            return find_common_ancestor(node.right, value1, value2)
+        else:
+            return node
+
+    def find_distance_to_node(node, value, distance):
+        if node is None:
+            return None
+
+        if node.value == value:
+            return distance
+
+        left_distance = find_distance_to_node(node.left, value, distance + 1)
+        if left_distance is not None:
+            return left_distance
+
+        right_distance = find_distance_to_node(node.right, value, distance + 1)
+        if right_distance is not None:
+            return right_distance
+
+        return None
+
+    # Find the common ancestor of node1 and node2
+    common_ancestor = find_common_ancestor(root, node1, node2)
+
+    # Find the distance from the common ancestor to node1 and node2
+    distance1 = find_distance_to_node(common_ancestor, node1, 0)
+    distance2 = find_distance_to_node(common_ancestor, node2, 0)
+
+    # Return the sum of the distances
+    return distance1 + distance2
+
+
+# Example usage
+# Create the binary search tree from the input
+root = TreeNode(8)
+root.left = TreeNode(3)
+root.right = TreeNode(10)
+root.left.left = TreeNode(1)
+root.left.right = TreeNode(6)
+root.left.right.left = TreeNode(4)
+root.left.right.right = TreeNode(7)
+root.right.right = TreeNode(14)
+root.right.right.left = TreeNode(13)
+
+# Find the distance between two nodes in the BST
+distance1 = find_distance(root, 6, 14)
+print("The distance between the two keys =", distance1)
+
+distance2 = find_distance(root, 3, 4)
+print("The distance between the two keys =", distance2)
+The distance between the two keys = 4
+The distance between the two keys = 2
