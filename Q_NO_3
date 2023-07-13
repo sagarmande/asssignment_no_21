@@ -1,0 +1,65 @@
+class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+class DoublyLinkedListNode:
+    def __init__(self, value):
+        self.value = value
+        self.prev = None
+        self.next = None
+
+
+def binary_tree_to_doubly_linked_list(root):
+    def in_order_traversal(node):
+        nonlocal prev, head
+
+        if node is None:
+            return
+
+        in_order_traversal(node.left)
+
+        # Create a new doubly linked list node
+        new_node = DoublyLinkedListNode(node.value)
+
+        # Update the previous and next pointers of the doubly linked list node
+        if prev is None:
+            head = new_node
+        else:
+            prev.next = new_node
+            new_node.prev = prev
+
+        prev = new_node
+
+        in_order_traversal(node.right)
+
+    # Initialize the previous and head pointers
+    prev = None
+    head = None
+
+    # Perform the in-order traversal to convert the binary tree to a doubly linked list
+    in_order_traversal(root)
+
+    return head
+
+
+# Example usage
+# Create the binary tree from the input
+root = TreeNode(10)
+root.left = TreeNode(5)
+root.right = TreeNode(20)
+root.right.left = TreeNode(30)
+root.right.right = TreeNode(35)
+
+# Convert the binary tree to a doubly linked list
+doubly_linked_list_head = binary_tree_to_doubly_linked_list(root)
+
+# Traverse and print the doubly linked list
+current = doubly_linked_list_head
+while current is not None:
+    print(current.value, end=" ")
+    current = current.next
+
+5 10 30 20 35
